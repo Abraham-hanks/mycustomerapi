@@ -1,0 +1,96 @@
+const jwt = require("jsonwebtoken");
+const bCrypt = require("bcryptjs");
+const { body } = require("express-validator/check");
+
+const UserModel = require("../models/store_admin");
+const CustomerModel = require("../models/customer");
+const { signToken, errorHandler } = require("./login_controler");
+
+exports.validate = (method) => {
+  switch (method) {
+    case "body": {
+      return [
+        body("phone_number").isInt(),
+        body("password").isLength({ min: 6 }),
+      ];
+    }
+  }
+};
+
+//  Register User
+module.exports.registerUser = async (req, res) => {
+  let {
+    password,
+    phone_number: identifier,
+    user_role = "store_admin",
+  } = req.body;
+
+  try {
+    //  Duplicate check
+    let user = await UserModel.findOne({ identifier });
+    if (user) {
+      return res.status(409).json({
+        success: false,
+        message: "User already exists",
+        error: {
+          statusCode: 409,
+          description:
+            "Phone number already taken, please use another phone number",
+        },
+      });
+    }
+    password = await bCrypt.hash(password, 10);
+    user = await UserModel.create({
+      identifier,
+      local: { phone_number: identifier, password, user_role },
+    });
+    const api_token = signToken({
+      phone_number: identifier,
+      user_role,
+      _id: user._id,
+    });
+    user.api_token = api_token;
+    user = await user.save();
+    return res.status(201).json({
+      success: true,
+      message: "User registration successfull",
+      data: {
+        statusCode: 201,
+        user,
+      },
+    });
+  } catch (error) {
+    errorHandler(error, res);
+  }
+};
+
+//  Register Customer
+module.exports.registerCustomer = async (req, res) => {
+  const { name, phone_number, email } = req.body;
+
+  try {
+    let customer = await CustomerModel.findOne({ phone_number });
+    if (customer) {
+      return res.status(409).json({
+        message: "Phone number already taken. Please use another phone number.",
+        success: false,
+        error: {
+          statusCode: 409,
+        },
+      });
+    }
+    customer = await CustomerModel.create({ phone_number, name, email });
+    return res.status(201).json({
+      success: true,
+      message: "Customer registered successfully...",
+      Customer: {
+        _id: customer._id,
+        name,
+        phone_number,
+        store_ref_id: customer.store_ref_id,
+      },
+    });
+  } catch (error) {
+    errorHandler(error, res);
+  }
+};

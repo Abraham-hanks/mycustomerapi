@@ -1,0 +1,49 @@
+{
+  "name": "nodejs-complete-guide",
+  "version": "1.0.0",
+  "description": "Complete Node.js Guide",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node app.js",
+    "start:dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Abraham-Hanks",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^26.1.0",
+    "nodemon": "1.18.3",
+    "swagger-ui-express": "^4.1.4",
+    "yamljs": "^0.3.0"
+  },
+  "dependencies": {
+    "africastalking": "^0.5.2",
+    "axios": "^0.19.2",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "1.18.3",
+    "cloudinary": "^1.22.0",
+    "cors": "^2.8.5",
+    "datauri": "^3.0.0",
+    "depcheck": "^0.9.2",
+    "dotenv": "^8.2.0",
+    "ejs": "2.6.1",
+    "express": "4.16.3",
+    "express-validator": "5.3.0",
+    "googleapis": "^52.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.19",
+    "mongoose": "5.7.5",
+    "multer": "^1.4.2",
+    "multer-storage-cloudinary": "^4.0.0",
+    "node-cron": "^2.0.3",
+    "nodemailer": "^4.6.8",
+    "query-string": "^6.13.1",
+    "swagger-ui-express": "^4.1.4",
+    "twilio": "^3.46.0",
+    "yamljs": "^0.3.0"
+  }
+}
